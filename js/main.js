@@ -11,7 +11,10 @@ let player1 = document.getElementById('player1'); // Player 1's element (O)
 let player2 = document.getElementById('player2'); // Player 2's element (X)
 
 /* ===== INITIAL PROGRAM SETUP ===== */
-// Add style elements and button to Start and Finish Menu in addition to preparing game
+/* ====================================================================================
+// Add style elements and button to Start and Finish Menu in addition to 
+preparing game.
+===================================================================================== */
 boardDiv.style.display = 'none'; // Hide Game Board on load
 startDiv.innerHTML = '<div class="screen screen-start" id="start"> <header><h1>Tic Tac Toe</h1> <a href="#" class="button" id="startButton">Start Game</a></header></div>'; // JavaScript invoked Start Menu HTML
 finishDiv.innerHTML = '<div class="screen screen-win" id="finish"> <header><h1>Tic Tac Toe</h1> <p id="message"></p><a href="#" class="button" id="finishButton">New Game</a></header></div>'; // JavaScript invoked Finish Menu HTML
@@ -22,7 +25,10 @@ const finishScreenDiv = document.getElementById('finish'); // Obtain Finish's di
 player2.className += ' active'; // Default to a Player 2 highlight (X goes first)
 
 /* ===== FUNCTIONS ===== */
-// Check horizontal, vertical, and diagonal planes of Game Board to see if there's a winner
+/* ====================================================================================
+Check horizontal, vertical, and diagonal planes of Game Board to see if 
+there's a winner.
+===================================================================================== */
 function checkWin(i) {
     if((gameBoard[0].className.includes('filled-'+i)) && (gameBoard[1].className.includes('filled-'+i)) && (gameBoard[2].className.includes('filled-'+i)))
     {
@@ -61,7 +67,9 @@ function checkWin(i) {
     }
 }
 
-// Check if there is no winner after Game Board is filled
+/* ====================================================================================
+Check if there is no winner after Game Board is filled.
+===================================================================================== */
 function checkDraw() {
     let boardFilledCounter = 0; // If counter reaches 9 game was a draw, return True
 
@@ -80,7 +88,10 @@ function checkDraw() {
     return false;
 }
 
-// If there's a winner or draw, show the Finish Menu, corresponding information, and a button for returning to Start Menu
+/* ====================================================================================
+If there's a winner or draw, show the Finish Menu, corresponding information, and a button 
+for returning to Start Menu.
+===================================================================================== */
 function declareWinner(i) {
     if(i === 1) {
         boardDiv.style.display = 'none';
@@ -101,14 +112,19 @@ function declareWinner(i) {
 }
 
 /* ===== EVENT LISTENERS ===== */
-// Create event listener for the Start Button on the Start Menu
+/* ====================================================================================
+Create event listener for the Start Button on the Start Menu.
+===================================================================================== */
 const startButton = document.getElementById('startButton');
 startButton.addEventListener('click', () => {
     startDiv.style.display = 'none';
     boardDiv.style.display = '';
 });
 
-// Create event listener for the New Game button on the Finish Menu to reset the game and divs
+/* ====================================================================================
+Create event listener for the New Game button on the Finish Menu to reset the 
+game and divs.
+===================================================================================== */
 const finishButton = document.getElementById('finishButton');
 finishButton.addEventListener('click', () => {
     finishDiv.style.display = 'none';
@@ -126,18 +142,17 @@ finishButton.addEventListener('click', () => {
     document.getElementById('message').innerHTML = '';
 });
 
-// Create event listener for box selections of Game Board, including mouseover and mouseout
+/* ====================================================================================
+Create event listener for box selections of Game Board, including mouseover
+ and mouseout.
+===================================================================================== */
 gameBoard.forEach(function(element) {
     element.addEventListener('click', (e) => {
-        
-        //First check if space is taken
-        if (element.className.includes('filled-')){
-            alert('That space is already taken!');
-            return 0;
-        }
 
-        // Add X or O depending on whether Player 1 or Player 2 had turn
-        if (playerTurn === 1) {
+        // Check if space is filled (do nothing). If not then add X or O depending on player turn
+        if (element.className.includes('filled-')) {
+            return 0;
+        } else if (playerTurn === 1 && !element.className.includes('filled-')) {
             element.className += ' box-filled-1';
             player1.classList.remove('active');
             player2.className += ' active';
@@ -147,7 +162,7 @@ gameBoard.forEach(function(element) {
                 declareWinner(0);
             }
             playerTurn += 1;
-        } else if (playerTurn === 2) {
+        } else if (playerTurn === 2 && !element.className.includes('filled-')) {
             element.className += ' box-filled-2';
             player2.classList.remove('active');
             player1.className += ' active';
@@ -160,16 +175,18 @@ gameBoard.forEach(function(element) {
         }
     })
 
-    // Show Players preview of their X or O
+    // Show Players preview of their X or O if space isn't already filled
     element.addEventListener('mouseover', (e) => {
-        if (playerTurn === 1) {
+        if (element.className.includes('filled-')) {
+            return 0;
+        } else if (playerTurn === 1) {
             element.style.backgroundImage = "url('img/o.svg')";
         } else if (playerTurn === 2) {
             element.style.backgroundImage = "url('img/x.svg')";
         }
     })
 
-    // Remove X or O preview when mouse leaves Game Board box
+    // Remove X or O preview when mouse leaves Game Board box if box isn't filled
     element.addEventListener('mouseout', (e) => {
         if (playerTurn === 1) {
             element.style.backgroundImage = "";
